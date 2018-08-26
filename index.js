@@ -1,4 +1,4 @@
-const {send, json} = require('micro')
+const {send} = require('micro')
 
 const { router, get } = require('microrouter')
 
@@ -18,7 +18,7 @@ const teamHandler = async (req, res) => {
   		const response = await got(urlOf(req.params.team), options)
 
   		if(response.body.teamStatsTotals.length === 0) {
-	  		return send(res, 404, 'No team by this name')
+	  		return send(res, 404, 'No team by the name ' + req.params.team)
 	  	}
 
   		return send(res, 200, response.body)
@@ -30,6 +30,7 @@ const teamHandler = async (req, res) => {
 }
 
 const routes = [
+	get('/team/:team/top-pitchers', require('./handlers/top-pitchers')),
 	get('/team/:team', teamHandler),
 	get('/*', (req, res) => send(res, 404, 'Not a valid route'))
 ]
